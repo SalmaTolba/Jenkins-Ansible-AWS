@@ -1,0 +1,42 @@
+- name: jenkins_slave
+  hosts: all
+  user: ubuntu
+  become: yes
+  tasks:
+    - name: update system
+      apt: 
+        update_cache: yes
+    
+    - name: install jdk
+      apt:
+        name: openjdk-8-jdk
+
+    - name: update system
+      apt: 
+        update_cache: yes
+
+    - name: install docker
+      apt: 
+        name: docker.io
+    
+    - name: change docker sock permissions
+      file:
+        path: /var/run/docker.sock
+        mode: '0666'
+        
+    - name: create jenkins dir
+      file: 
+        path: /home/ubuntu/jenkins_home
+        state: directory
+        mode: '0777'
+
+    - name: create bin dir
+      file: 
+        path: ~/bin
+        state: directory
+        mode: '0777'
+
+    - name: copy jar file
+      copy:
+        src: /home/salma/agent.jar
+        dest: ~/bin
